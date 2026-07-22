@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, type LucideIcon } from 'lucide-react';
 
 interface StatsCardProps {
@@ -32,12 +31,7 @@ export function StatsCard({ icon: Icon, title, value, change }: StatsCardProps) 
   }, [value, isNumeric]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5"
-    >
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2563EB]/10">
           <Icon className="w-5 h-5 text-[#60A5FA]" />
@@ -53,6 +47,6 @@ export function StatsCard({ icon: Icon, title, value, change }: StatsCardProps) 
         {isNumeric ? displayValue : value}
       </p>
       <p className="text-sm text-[var(--text-secondary)] mt-1">{title}</p>
-    </motion.div>
+    </div>
   );
 }

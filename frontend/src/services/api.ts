@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuthStore } from '../store/auth';
 import type { PaymentPlan, PaymentSession } from '../types';
 
 const api = axios.create({
@@ -8,19 +7,16 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  let token = useAuthStore.getState().token;
-  if (!token) {
-    try {
-      const stored = localStorage.getItem('nexus-auth');
-      if (stored) {
-        const { state } = JSON.parse(stored);
-        token = state?.token;
+  try {
+    const stored = localStorage.getItem('nexus-auth');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      const token = parsed?.state?.token;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch {}
-  }
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    }
+  } catch {}
   return config;
 });
 
@@ -28,7 +24,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
+      localStorage.removeItem('nexus-auth');
       window.location.href = '/login';
     }
     return Promise.reject(error);

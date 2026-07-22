@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useUIStore } from '../../store/ui';
+import { useUI } from '../../contexts/UIContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { MobileNav } from './MobileNav';
@@ -10,7 +10,7 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ title, children }: AppLayoutProps) {
-  const sidebarCollapsed = useUIStore((s) => s.sidebarCollapsed);
+  const { sidebarCollapsed } = useUI();
 
   return (
     <div className="min-h-screen">

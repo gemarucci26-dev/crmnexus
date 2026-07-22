@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Plus, Play, Pause, X, Megaphone, Trash2, Copy } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -159,18 +158,18 @@ export function Campaigns() {
 
   if (loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
             <Card key={i} className="animate-pulse h-48"><div /></Card>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-[var(--text-primary)]">Campanhas</h2>
         <Button size="sm" onClick={() => setShowCreate(true)}>
@@ -276,6 +275,6 @@ export function Campaigns() {
           <Button className="w-full" onClick={handleCreate}>Criar Campanha</Button>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 }

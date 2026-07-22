@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
-import { useAuthStore } from '../store/auth';
+import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import api from '../services/api';
@@ -43,12 +42,7 @@ export function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%)' }}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md"
-      >
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-4">
             <img src="/logo.png" alt="NEXUS" className="w-12 h-12 object-contain" />
@@ -120,7 +114,7 @@ export function Register() {
             </Link>
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Wallet, CheckCircle, XCircle, Loader2, Copy, Check, QrCode } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -124,7 +123,7 @@ export function Credits() {
 
   if (loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2563EB]/10">
             <Wallet className="w-5 h-5 text-[#60A5FA]" />
@@ -136,12 +135,12 @@ export function Credits() {
             <Card key={i} className="animate-pulse h-40"><div /></Card>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2563EB]/10">
           <Wallet className="w-5 h-5 text-[#60A5FA]" />
@@ -254,6 +253,6 @@ export function Credits() {
           </div>
         </Card>
       )}
-    </motion.div>
+    </div>
   );
 }

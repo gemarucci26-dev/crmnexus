@@ -1,9 +1,8 @@
 import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const isHydrated = useAuthStore((s) => s.isHydrated);
+  const { isAuthenticated, isHydrated } = useAuth();
 
   if (!isHydrated) {
     return (

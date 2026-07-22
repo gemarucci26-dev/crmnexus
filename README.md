@@ -41,11 +41,9 @@ O **CRM Exora** é um sistema de gestão de relacionamento com clientes focado e
 - **Build:** Vite
 - **Estilos:** Tailwind CSS + PostCSS + Autoprefixer
 - **Roteamento:** React Router DOM v6
-- **Estado:** Zustand
+- **Estado:** React Context API
 - **HTTP Client:** Axios
-- **Gráficos:** Recharts
 - **Ícones:** Lucide React
-- **Animações:** Framer Motion
 - **Datas:** date-fns
 - **Utilitários CSS:** clsx + tailwind-merge
 
@@ -112,9 +110,9 @@ nexus-crm/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
+│   │   ├── contexts/
 │   │   ├── pages/
 │   │   ├── services/
-│   │   ├── store/
 │   │   ├── styles/
 │   │   ├── types/
 │   │   └── utils/

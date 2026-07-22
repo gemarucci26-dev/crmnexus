@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Search, Bell, Sun, Moon, User, LogOut, Wallet } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useThemeStore } from '../../store/theme';
-import { useAuthStore } from '../../store/auth';
-import { useUIStore } from '../../store/ui';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useUI } from '../../contexts/UIContext';
 import { cn } from '../../utils/cn';
 
 interface HeaderProps {
@@ -12,13 +11,13 @@ interface HeaderProps {
 }
 
 export function Header({ title }: HeaderProps) {
-  const { mode, toggle } = useThemeStore();
-  const user = useAuthStore((s) => s.user);
-  const logout = useAuthStore((s) => s.logout);
-  const notifications = useUIStore((s) => s.notifications);
+  const { mode, toggle } = useTheme();
+  const user = useAuth((s) => s.user);
+  const logout = useAuth((s) => s.logout);
+  const notifications = useUI((s) => s.notifications);
+  const unreadCount = notifications.filter((n) => !n.read).length;
   const [showDropdown, setShowDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[var(--border)] bg-[var(--sidebar)]/80 backdrop-blur-lg px-6">
@@ -53,32 +52,25 @@ export function Header({ title }: HeaderProps) {
               </span>
             )}
           </button>
-          <AnimatePresence>
-            {showNotifications && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-xl"
-              >
-                <div className="p-3 border-b border-[var(--border)]">
-                  <p className="text-sm font-medium text-[var(--text-primary)]">Notificações</p>
-                </div>
-                <div className="max-h-64 overflow-y-auto p-2">
-                  {notifications.length === 0 ? (
-                    <p className="p-3 text-xs text-[var(--text-secondary)] text-center">Nenhuma notificação</p>
-                  ) : (
-                    notifications.slice(0, 5).map((n) => (
-                      <div key={n.id} className={cn('rounded-lg p-3 text-xs', !n.read && 'bg-[#2563EB]/10')}>
-                        <p className="font-medium text-[var(--text-primary)]">{n.title}</p>
-                        <p className="text-[var(--text-secondary)]">{n.message}</p>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {showNotifications && (
+            <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-xl">
+              <div className="p-3 border-b border-[var(--border)]">
+                <p className="text-sm font-medium text-[var(--text-primary)]">Notificações</p>
+              </div>
+              <div className="max-h-64 overflow-y-auto p-2">
+                {notifications.length === 0 ? (
+                  <p className="p-3 text-xs text-[var(--text-secondary)] text-center">Nenhuma notificação</p>
+                ) : (
+                  notifications.slice(0, 5).map((n) => (
+                    <div key={n.id} className={cn('rounded-lg p-3 text-xs', !n.read && 'bg-[#2563EB]/10')}>
+                      <p className="font-medium text-[var(--text-primary)]">{n.title}</p>
+                      <p className="text-[var(--text-secondary)]">{n.message}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="hidden sm:flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2">
@@ -96,26 +88,19 @@ export function Header({ title }: HeaderProps) {
             </div>
             <span className="hidden sm:inline text-sm text-[var(--text-primary)]">{user?.name || 'Usuário'}</span>
           </button>
-          <AnimatePresence>
-            {showDropdown && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-xl p-1"
+          {showDropdown && (
+            <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-[var(--border)] bg-[var(--card)] shadow-xl p-1">
+              <Link to="/configuracoes" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--hover)]">
+                <User className="w-4 h-4" /> Perfil
+              </Link>
+              <button
+                onClick={logout}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 cursor-pointer"
               >
-                <Link to="/configuracoes" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--hover)]">
-                  <User className="w-4 h-4" /> Perfil
-                </Link>
-                <button
-                  onClick={logout}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" /> Sair
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <LogOut className="w-4 h-4" /> Sair
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

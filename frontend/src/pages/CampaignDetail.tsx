@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, Send, XCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -103,24 +102,24 @@ export function CampaignDetail() {
 
   if (loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <Card className="animate-pulse h-64"><div /></Card>
         <Card className="animate-pulse h-64"><div /></Card>
         <Card className="animate-pulse h-64"><div /></Card>
-      </motion.div>
+      </div>
     );
   }
 
   if (!campaign) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <Card className="text-center py-12"><div>
           <p className="text-[var(--text-secondary)]">Campanha não encontrada</p>
           <Button variant="ghost" size="sm" className="mt-4" onClick={() => navigate('/campanhas')}>
             <ArrowLeft className="w-4 h-4" /> Voltar
           </Button>
         </div></Card>
-      </motion.div>
+      </div>
     );
   }
 
@@ -130,7 +129,7 @@ export function CampaignDetail() {
   const progress = totalLeads ? Math.round((dispatched / totalLeads) * 100) : 0;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <button onClick={() => navigate('/campanhas')} className="flex items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">
         <ArrowLeft className="w-4 h-4" /> Voltar
       </button>
@@ -202,7 +201,7 @@ export function CampaignDetail() {
       <Card><div>
         <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3">Disparos</h3>
         <Table columns={dispatchColumns} data={dispatches} getKey={(d) => d.id} pageSize={10} />
-      </div></Card>
-    </motion.div>
+      </div>      </Card>
+    </div>
   );
 }

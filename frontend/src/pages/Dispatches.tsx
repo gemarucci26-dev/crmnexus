@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Send, Filter } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Badge, statusVariant, statusLabel } from '../components/ui/Badge';
@@ -54,7 +53,7 @@ export function Dispatches() {
 
   if (loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 animate-pulse">
@@ -64,12 +63,12 @@ export function Dispatches() {
           ))}
         </div>
         <Card className="animate-pulse h-64"><div /></Card>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
           { label: 'Total', value: stats.total, color: 'text-[var(--text-primary)]' },
@@ -114,7 +113,7 @@ export function Dispatches() {
 
       <Card><div>
         <Table columns={columns} data={filtered} getKey={(d) => d.id} pageSize={10} />
-      </div></Card>
-    </motion.div>
+      </div>      </Card>
+    </div>
   );
 }

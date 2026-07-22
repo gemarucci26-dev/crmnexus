@@ -1,27 +1,8 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Download, Calendar } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-} from 'recharts';
 import api from '../services/api';
-
-function ChartTooltip({ active, payload, label }: any) {
-  if (!active || !payload) return null;
-  return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 shadow-xl">
-      <p className="text-xs font-medium text-[var(--text-secondary)] mb-1">{label}</p>
-      {payload.map((entry: any, i: number) => (
-        <p key={i} className="text-sm" style={{ color: entry.color }}>
-          {entry.name}: <span className="font-semibold">{entry.value}</span>
-        </p>
-      ))}
-    </div>
-  );
-}
 
 export function Reports() {
   const [period, setPeriod] = useState('6m');
@@ -51,7 +32,6 @@ export function Reports() {
         ]);
       } catch (e) {
         console.error('Erro ao carregar relatórios:', e);
-        // Fallback: dados vazios
         setConversionData([]);
         setLeadsOverTime([]);
         setCostData([]);
@@ -77,7 +57,7 @@ export function Reports() {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-[var(--text-primary)]">Relatórios</h2>
         <div className="flex gap-2">
@@ -111,72 +91,62 @@ export function Reports() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
-          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Taxa de Conversão</h3>
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={conversionData}>
-              <defs>
-                <linearGradient id="rGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#2563EB" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="value" name="Conversão %" stroke="#2563EB" fill="url(#rGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Taxa de Conversão</h3>
+          <div className="space-y-2">
+            {conversionData.length === 0 && <p className="text-xs text-[var(--text-secondary)]">Sem dados no período</p>}
+            {conversionData.slice(-6).map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-sm">
+                <span className="text-[var(--text-secondary)]">{item.name}</span>
+                <span className="font-medium text-[var(--text-primary)]">{item.value}%</span>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card>
-          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Leads ao Longo do Tempo</h3>
-          <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={leadsOverTime}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="value" name="Leads" fill="#3B82F6" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Leads ao Longo do Tempo</h3>
+          <div className="space-y-2">
+            {leadsOverTime.length === 0 && <p className="text-xs text-[var(--text-secondary)]">Sem dados no período</p>}
+            {leadsOverTime.slice(-6).map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-sm">
+                <span className="text-[var(--text-secondary)]">{item.name}</span>
+                <span className="font-medium text-[var(--text-primary)]">{item.value}</span>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card>
-          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Custo por Lead</h3>
-          <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={costData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <Tooltip content={<ChartTooltip />} />
-              <Line type="monotone" dataKey="value" name="CPL" stroke="#2563EB" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="value2" name="CPL Qualificado" stroke="#60A5FA" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">Custo por Lead</h3>
+          <div className="space-y-2">
+            {costData.length === 0 && <p className="text-xs text-[var(--text-secondary)]">Sem dados no período</p>}
+            {costData.slice(-6).map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-sm">
+                <span className="text-[var(--text-secondary)]">{item.name}</span>
+                <div className="text-right">
+                  <span className="font-medium text-[var(--text-primary)]">R$ {item.value.toFixed(2)}</span>
+                  {item.value2 != null && <span className="text-xs text-[var(--text-secondary)] ml-2">R$ {item.value2.toFixed(2)}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card>
-          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">ROI por Mês</h3>
-          <ResponsiveContainer width="100%" height={240}>
-            <AreaChart data={roiData}>
-              <defs>
-                <linearGradient id="roiGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-              <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="value" name="ROI" stroke="#3B82F6" fill="url(#roiGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-2">ROI por Mês</h3>
+          <div className="space-y-2">
+            {roiData.length === 0 && <p className="text-xs text-[var(--text-secondary)]">Sem dados no período</p>}
+            {roiData.slice(-6).map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-sm">
+                <span className="text-[var(--text-secondary)]">{item.name}</span>
+                <span className="font-medium text-[var(--text-primary)]">{item.value.toFixed(1)}x</span>
+              </div>
+            ))}
+          </div>
         </Card>
       </div>
-    </motion.div>
+    </div>
   );
 }

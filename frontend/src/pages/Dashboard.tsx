@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Send, MessageSquare, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { StatsCard } from '../components/dashboard/StatsCard';
-import { ConversionChart, LeadsPerDayChart, MessagesSentChart, CampaignPerformanceChart } from '../components/dashboard/Charts';
 import { Card } from '../components/ui/Card';
 import { Badge, statusVariant, statusLabel } from '../components/ui/Badge';
 import api from '../services/api';
-import { useAuthStore } from '../store/auth';
+import { useAuth } from '../contexts/AuthContext';
 import type { DashboardStats, ChartData, Campaign } from '../types';
 
 function normalizeStatus(status: string): Campaign['status'] {
@@ -26,14 +24,10 @@ function isActiveStatus(status: string): boolean {
 
 export function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [conversion, setConversion] = useState<ChartData[]>([]);
-  const [leadsDay, setLeadsDay] = useState<ChartData[]>([]);
-  const [messages, setMessages] = useState<ChartData[]>([]);
-  const [campaignPerf, setCampaignPerf] = useState<ChartData[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [activity, setActivity] = useState<Array<{ id: string; type: string; message: string; time: string; timestamp?: string }>>([]);
   const [loading, setLoading] = useState(true);
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAuthenticated = useAuth((s) => s.isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -43,17 +37,12 @@ export function Dashboard() {
     setLoading(true);
     async function fetchData() {
       try {
-        const [statsRes, chartsRes, campaignsRes, timelineRes] = await Promise.all([
+        const [statsRes, campaignsRes, timelineRes] = await Promise.all([
           api.get('/dashboard/stats'),
-          api.get('/dashboard/charts'),
           api.get('/campaigns'),
           api.get('/dashboard/timeline'),
         ]);
         setStats(statsRes.data);
-        setConversion(chartsRes.data.conversion || []);
-        setLeadsDay(chartsRes.data.leadsPerDay || []);
-        setMessages(chartsRes.data.messagesSent || []);
-        setCampaignPerf([]);
         setCampaigns(campaignsRes.data);
         setActivity(timelineRes.data || []);
       } catch (e) {
@@ -67,7 +56,7 @@ export function Dashboard() {
 
   if (loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <div className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 animate-pulse">
@@ -81,27 +70,20 @@ export function Dashboard() {
             <Card key={i} className="h-64 animate-pulse"><div /></Card>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   const activeCampaigns = campaigns.filter(c => isActiveStatus(c.status));
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatsCard icon={Send} title="Leads Disparados" value={stats?.totalDispatches || 0} />
         <StatsCard icon={MessageSquare} title="Total Leads" value={stats?.totalLeads || 0} />
         <StatsCard icon={TrendingUp} title="Taxa de Resposta" value={`${Number(stats?.responseRate || 0).toFixed(1)}%`} />
         <StatsCard icon={Users} title="Leads Qualificados" value={stats?.qualifiedLeads || 0} />
         <StatsCard icon={DollarSign} title="Custo por Lead" value={`R$ ${Number(stats?.costPerLead || 0).toFixed(2)}`} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <ConversionChart data={conversion} />
-        <LeadsPerDayChart data={leadsDay} />
-        <MessagesSentChart data={messages} />
-        <CampaignPerformanceChart data={campaignPerf} />
       </div>
 
       <Card><div>
@@ -150,6 +132,6 @@ export function Dashboard() {
           )}
         </div>
       </div></Card>
-    </motion.div>
+    </div>
   );
 }

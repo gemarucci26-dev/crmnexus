@@ -12,9 +12,8 @@ import {
   ChevronRight,
   LogOut,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useUIStore } from '../../store/ui';
-import { useAuthStore } from '../../store/auth';
+import { useAuth } from '../../contexts/AuthContext';
+import { useUI } from '../../contexts/UIContext';
 import { cn } from '../../utils/cn';
 
 const menuItems = [
@@ -29,27 +28,22 @@ const menuItems = [
 ];
 
 export function Sidebar() {
-  const { sidebarCollapsed, toggleSidebar } = useUIStore();
-  const logout = useAuthStore((s) => s.logout);
+  const { sidebarCollapsed, toggleSidebar } = useUI();
+  const logout = useAuth((s) => s.logout);
 
   return (
-    <motion.aside
-      animate={{ width: sidebarCollapsed ? 72 : 256 }}
-      transition={{ duration: 0.2 }}
-      className="hidden md:flex flex-col h-screen fixed left-0 top-0 z-40 border-r border-[var(--border)] bg-[var(--sidebar)]"
+    <aside
+      className="hidden md:flex flex-col h-screen fixed left-0 top-0 z-40 border-r border-[var(--border)] bg-[var(--sidebar)] transition-all duration-200"
+      style={{ width: sidebarCollapsed ? 72 : 256 }}
     >
       <div className="flex items-center gap-3 p-5 h-16 border-b border-[var(--border)]">
         <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden shrink-0">
           <img src="/logo.png" alt="NEXUS" className="w-7 h-7 object-contain" />
         </div>
         {!sidebarCollapsed && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-lg font-bold text-[var(--text-primary)] tracking-tight"
-          >
+          <span className="text-lg font-bold text-[var(--text-primary)] tracking-tight">
             NEXUS
-          </motion.span>
+          </span>
         )}
       </div>
 
@@ -89,6 +83,6 @@ export function Sidebar() {
           {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
         </button>
       </div>
-    </motion.aside>
+    </aside>
   );
 }

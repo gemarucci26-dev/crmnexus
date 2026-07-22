@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { User, Lock, Bell, Key, Sun, MessageSquare } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
-import { useAuthStore } from '../store/auth';
-import { useThemeStore } from '../store/theme';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import api from '../services/api';
 
 type Tab = 'perfil' | 'senha' | 'notificacoes' | 'api' | 'tema' | 'whatsapp';
@@ -21,8 +20,8 @@ const tabs: { id: Tab; label: string; icon: any }[] = [
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState<Tab>('perfil');
-  const { user, setUser } = useAuthStore();
-  const { mode, toggle } = useThemeStore();
+  const { user, setUser } = useAuth();
+  const { mode, toggle } = useTheme();
 
   const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '' });
   const [passwords, setPasswords] = useState({ current: '', new: '', confirm: '' });
@@ -30,7 +29,6 @@ export function Settings() {
   const [apiKey] = useState('nxs_k8f2j7d9a3m5p1q6r4t0y2w4x6z8');
   const [webhook, setWebhook] = useState('');
 
-  // WhatsApp / Evolution API
   const [waConfig, setWaConfig] = useState({ apiUrl: 'http://localhost:8080', apiKey: '', instanceName: '' });
   const [waLoading, setWaLoading] = useState(false);
   const [waTestResult, setWaTestResult] = useState<{ ok: boolean; message: string } | null>(null);
@@ -42,7 +40,7 @@ export function Settings() {
   }, []);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto pb-2">
         {tabs.map(({ id, label, icon: Icon }) => (
@@ -219,6 +217,6 @@ export function Settings() {
           </div>
         </Card>
       )}
-    </motion.div>
+    </div>
   );
 }

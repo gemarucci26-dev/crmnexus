@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Upload, Plus, Search, Trash2, FileSpreadsheet } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -89,7 +88,7 @@ export function Leads() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex gap-2 flex-wrap">
           <div className="w-64">
@@ -162,6 +161,6 @@ export function Leads() {
           <p className="text-xs text-[var(--text-secondary)]">Formatos aceitos: CSV, XLSX. Colunas obrigatórias: nome, telefone</p>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 }
