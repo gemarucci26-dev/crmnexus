@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #07111F;
+  --sidebar: #0A1628;
+  --card: #0D1B2E;
+  --hover: #13233A;
+  --border: rgba(255, 255, 255, 0.06);
+  --text-primary: #E6EEF9;
+  --text-secondary: #8FA6C3;
+  --primary: #2563EB;
+  --highlight: #3B82F6;
+  --light: #60A5FA;
+  --dark: #1E40AF;
+}
+
+[data-theme="light"] {
+  --bg: #F2F6FC;
+  --sidebar: #EAF1FB;
+  --card: #FFFFFF;
+  --hover: #DCE8FA;
+  --border: rgba(0, 0, 0, 0.06);
+  --text-primary: #10213A;
+  --text-secondary: #5B708C;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hover) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--hover);
+  border-radius: 3px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  transition: background-color 200ms ease, color 2000ms ease;
+}
+
+.glass {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@layer base {
+  * {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+}
